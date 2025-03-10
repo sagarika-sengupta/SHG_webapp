@@ -10,6 +10,14 @@
         </div>
         <div class="text-center mt-4">
             <button class="btn btn-success px-5" onclick="proceed()">Proceed</button>
+            <script>
+                function proceed() {
+                    var amount = document.getElementById('amount').value;
+                    if (amount == '10') {
+                        window.location.href = '/contribution';
+                    }
+                }
+            </script>
         </div>
     </div>
 

@@ -7,7 +7,7 @@
     Monthly Contribution
 </a>-->
 
-            <button onclick="window.location.href='{{ route('contribution') }}'" class="btn btn-primary p-3 flex-fill rounded-0">Monthly Contribution</button>
+            <!-- <button onclick="window.location.href='{{ route('contribution') }}'" class="btn btn-primary p-3 flex-fill rounded-0">Monthly Contribution</button> -->
             <button onclick="window.location.href='{{ route('deposit') }}'"class="btn btn-primary p-3 flex-fill rounded-0">Deposit</button>
             <button onclick="window.location.href='{{ route('loan') }}'"class="btn btn-primary p-3 flex-fill rounded-0">Loan</button>
             <button class="btn btn-primary p-3 flex-fill rounded-0">Investment</button>
