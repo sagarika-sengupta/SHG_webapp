@@ -4,7 +4,7 @@
         <div class="d-flex justify-content-center mt-4">
             <select class="form-select w-50" wire:model="amount">
                 <option selected disabled>Select an Amount</option>
-                <option value="100">Rs. 100</option>
+               <!-- <option value="100">Rs. 100</option> -->
                 <option value="200">Rs. 200</option>
                 <option value="500">Rs. 500</option>
                 <option value="1000">Rs. 1000</option>

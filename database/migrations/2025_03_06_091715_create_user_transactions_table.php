@@ -8,6 +8,7 @@ return new class extends Migration {
     public function up(): void {
         Schema::create('user_transactions', function (Blueprint $table) {
             //$table->id();
+            $table->string('transaction_id')->primary(); // Primary key
             $table->string('user_id'); // Since user_id is stored as string
             $table->decimal('amount', 10, 2);
             $table->enum('transaction_type', ['deposit', 'credit', 'debit']); // Type of transaction

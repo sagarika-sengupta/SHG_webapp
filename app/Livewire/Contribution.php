@@ -5,12 +5,14 @@ namespace App\Livewire;
 use Illuminate\Support\Facades\Auth;
 use App\Models\UserTransaction;
 use Livewire\Component;
+use Carbon\Carbon;
 
 class Contribution extends Component
 {
     public $user_id;
     public $amount;
     public $transaction_type;
+    public $transactionId;
 
     public function makePayment()
     {
@@ -30,8 +32,12 @@ class Contribution extends Component
         }
 
         try {
+            // Generate the transaction ID
+            $transactionId = $this->generateTransactionId();
+
             // ✅ Save the transaction
             UserTransaction::create([
+                'transaction_id' => $transactionId,
                 'user_id' => $userId,
                 'amount' => $this->amount,
                 'transaction_type' => $this->transaction_type,
@@ -41,6 +47,43 @@ class Contribution extends Component
         } catch (\Exception $e) {
             session()->flash('payment-error', 'An error occurred.');
         }
+    }
+    private function generateTransactionId()
+    {
+        $prefix = 'TRNRD';
+        $date = date('dmY'); // Format: ddMMyyyy
+        // Get the last transaction for today
+            // Get the last transaction based on the latest created_at timestamp
+        $lastTransaction = UserTransaction::latest('created_at')->first();
+
+        // Extract the last 3 digits, if no transaction exists, start from 001
+        $lastNumber = $lastTransaction ? intval(substr($lastTransaction->transaction_id, -3)) : 0;
+
+        
+        // Increment and format it to always have 3 digits (001, 002, 003, ...)
+        $newNumber = str_pad($lastNumber + 1, 3, '0', STR_PAD_LEFT);
+        $transactionId = $prefix . $date . $newNumber;
+
+        return $transactionId;
+
+        //$lastTransaction = UserTransaction::whereDate('created_at', Carbon::today())
+          // ->orderBy('id', 'desc')
+           //->first();
+    
+        // If no previous transaction, start with 001
+        //$lastNumber = $lastTransaction ? intval(substr($lastTransaction->transaction_id, -3)) : 0;
+        //$newNumber = str_pad($lastNumber + 1, 3, '0', STR_PAD_LEFT);
+    
+        $transactionId = $prefix . $date;// $newNumber;
+        //. $date
+        //\Log::info("Generated Transaction ID: " . $transactionId); // Debugging
+    
+        return $transactionId;
+    }
+
+    public function render()
+    {
+        return view('livewire.contribution');
     }
 }
 /*
