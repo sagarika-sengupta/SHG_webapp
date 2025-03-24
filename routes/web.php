@@ -13,6 +13,12 @@ use App\Livewire\Settings;
 use App\Livewire\Contribution;
 use App\Livewire\Deposit;
 use App\Livewire\Loan;
+use App\Livewire\GroupDashboard;
+use App\Livewire\GroupRegistration;
+use App\Models\Group;
+use App\Http\Controllers\GroupTable;
+//use App\Http\Controllers\GroupController;
+//use App\Http\Controllers\GroupLoginController;
 use App\Http\Controllers\LogoutController;
 use Illuminate\Auth\Events\Logout;
 use App\Http\Controllers\TransactionController;
@@ -28,6 +34,8 @@ Route::get('/contact', Contact::class)->name('contact');
 Route::get('/contribution', Contribution::class)->name('contribution');
 Route::get('/deposit', Deposit::class)->name('deposit');
 Route::get('/loan', Loan::class)->name('loan');
+Route::get('/group-registration', GroupRegistration::class)->name('group-registration');
+
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
@@ -35,4 +43,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/settings', Settings::class)->name('settings');
     Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
     Route::post('/save-transaction', [TransactionController::class, 'store']);
+    Route::get('/group', [GroupTable::class, 'index']);
+    Route::get('/group-dashboard', GroupDashboard::class)->name('GroupDashboard');
 });
