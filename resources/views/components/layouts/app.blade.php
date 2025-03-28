@@ -38,6 +38,21 @@
         <p>&copy; {{ date('D, d-M-Y') }}  All rights reserved.</p>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js">
+        //document.addEventListener('DOMContentLoaded', function () {
+        //    Livewire.on('show-user-id-modal', (data) => {
+        //        console.log("Received User ID:", data.user_id);
+        //        document.getElementById('generatedUserId').innerText = data.user_id;
+
+        //        var userIdModal = new bootstrap.Modal(document.getElementById('userIdModal'));
+        //        userIdModal.show();
+        //    });
+
+        //    document.getElementById('redirectToLogin').addEventListener('click', function () {
+        //        window.location.href = "{{ route('home') }}";
+        //    });
+        //});
+    
+    </script>
 </body>
 </html>

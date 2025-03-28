@@ -15,8 +15,10 @@ use App\Livewire\Deposit;
 use App\Livewire\Loan;
 use App\Livewire\GroupDashboard;
 use App\Livewire\GroupRegistration;
+use App\Livewire\Notification;
 use App\Models\Group;
 use App\Http\Controllers\GroupTable;
+
 //use App\Http\Controllers\GroupController;
 //use App\Http\Controllers\GroupLoginController;
 use App\Http\Controllers\LogoutController;
@@ -35,7 +37,7 @@ Route::get('/contribution', Contribution::class)->name('contribution');
 Route::get('/deposit', Deposit::class)->name('deposit');
 Route::get('/loan', Loan::class)->name('loan');
 Route::get('/group-registration', GroupRegistration::class)->name('group-registration');
-
+Route::get('/notification', Notification::class)->name('notification');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', Dashboard::class)->name('dashboard');

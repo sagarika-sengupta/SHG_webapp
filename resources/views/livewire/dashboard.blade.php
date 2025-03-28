@@ -1,5 +1,12 @@
 <div>
     <div class="container mt-4">
+        <!-- Notification Button -->
+        <div class="d-flex justify-content-end mb-3">
+            <button class="btn btn-primary rounded-0" onclick="window.location.href='{{ route('notification') }}'">
+                Notifications <span class="badge bg-danger"> {{ $notificationCount }} <!--specify a dynamic value for notification-->
+                </span>
+            </button>
+        </div>
     <!-- Horizontal Bar (Top Navigation) -->
     <div class="border border-primary bg-light p-3">
         <div class="d-flex justify-content-between gap-3">

@@ -14,6 +14,8 @@ class Dashboard extends Component
     public $userId;
     public $branch;
     public $accountNumber;
+    public $notificationCount;
+
 
     public function mount()
     {
@@ -32,6 +34,9 @@ class Dashboard extends Component
         $this->availableBalance = UserTransaction::where('user_id', $this->userId)
             ->where('transaction_type', 'deposit')
             ->sum('amount');
+        
+         // Fetch the count of notifications for the logged-in user
+         $this->notificationCount = UserTransaction::where('user_id', auth()->id())->count();
     }
 
     public function render()
