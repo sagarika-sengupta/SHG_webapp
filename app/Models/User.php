@@ -23,8 +23,10 @@ class User extends Authenticatable
         'village',
         'district',
         'state',
-        'monthly_contribution',
+       // 'monthly_contribution',
         'group_id',
+        'kyc_data',
+        'is_kyc_completed',
         'user_id',
         'password',
     ];

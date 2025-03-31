@@ -17,6 +17,7 @@
         @endif
 
         <form wire:submit.prevent="register">
+            <div>
             <div class="mb-3">
                 <input type="text" class="form-control w-100" wire:model="name" placeholder="Name" required>
                 @error('name') <div class="text-danger small">{{ $message }}</div> @enderror
@@ -43,16 +44,6 @@
             </div>
 
             <div class="mb-3">
-                <select class="form-control w-100" wire:model="monthly_contribution" required>
-                    <option value="" disabled selected>Select Monthly Contribution</option>
-                    <option value="200">200</option>
-                    <option value="500">500</option>
-                    <option value="1000">1000</option>
-                </select>
-                @error('monthly_contribution') <div class="text-danger small">{{ $message }}</div> @enderror
-            </div>
-
-            <div class="mb-3">
                 <input type="text" class="form-control w-100" wire:model="group_id" placeholder="Group ID (if given)">
                 @error('group_id') <div class="text-danger small">{{ $message }}</div> @enderror
             </div>
@@ -70,6 +61,7 @@
 
             <!-- Register Button -->
             <button type="submit" class="btn btn-success w-100">Register</button>
+            </div>
         </form>
     </div>
 
@@ -91,3 +83,12 @@
         </div>
     </div> -->
 </div> <!-- END SINGLE ROOT WRAPPER -->
+         <!--   <div class="mb-3"> 
+                <select class="form-control w-100" wire:model="monthly_contribution" required>
+                    <option value="" disabled selected>Select Monthly Contribution</option>
+                    <option value="200">200</option>
+                    <option value="500">500</option>
+                    <option value="1000">1000</option>
+                </select>
+                @error('monthly_contribution') <div class="text-danger small">{{ $message }}</div> @enderror
+            </div> -->

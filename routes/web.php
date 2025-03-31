@@ -16,6 +16,7 @@ use App\Livewire\Loan;
 use App\Livewire\GroupDashboard;
 use App\Livewire\GroupRegistration;
 use App\Livewire\Notification;
+use App\Livewire\kyc;
 use App\Models\Group;
 use App\Http\Controllers\GroupTable;
 
@@ -38,6 +39,7 @@ Route::get('/deposit', Deposit::class)->name('deposit');
 Route::get('/loan', Loan::class)->name('loan');
 Route::get('/group-registration', GroupRegistration::class)->name('group-registration');
 Route::get('/notification', Notification::class)->name('notification');
+//Route::get('/kyc', kyc::class)->name('kyc');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
@@ -47,4 +49,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/save-transaction', [TransactionController::class, 'store']);
     Route::get('/group', [GroupTable::class, 'index']);
     Route::get('/group-dashboard', GroupDashboard::class)->name('GroupDashboard');
+});
+
+Route::get("/test", function () {
+    return view('livewire.test');
 });

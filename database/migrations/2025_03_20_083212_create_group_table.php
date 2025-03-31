@@ -16,8 +16,11 @@ return new class extends Migration
             $table->id();
             $table->string('group_id')->unique(); // Unique group identifier
             $table->string('group_name'); // Name of the group
-            $table->string('location'); // Location of the group
+            $table->string('village'); // Location of the group
+            $table->string('district'); // Location of the group
+            $table->string('state'); // Location of the group
             $table->integer('user_count')->default(0); // Number of users in the group
+            $table->json('members')->nullable(); // JSON column to store registered users
             $table->timestamps();
         });
 

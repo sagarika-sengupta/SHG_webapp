@@ -3,6 +3,12 @@
     @auth
         <div class="card text-center p-4">
             <p class="h4">Welcome, {{ Auth::user()->name }}!</p>
+
+                            <!-- KYC Form Modal Trigger -->
+                @if (!Auth::user()->is_kyc_completed)
+                    <livewire:kyc />
+                @endif
+
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <button type="submit" class="btn btn-danger mt-3">Logout</button>

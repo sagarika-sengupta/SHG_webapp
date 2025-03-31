@@ -58,7 +58,7 @@
                             <th>Account No.</th>
                             <th>Branch</th>
                             <th>Available Balance</th>
-                            <th>Balance Transaction</th>
+                            <th>Transaction History</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -66,7 +66,7 @@
                             <td>{{$accountNumber}}</td>
                             <td>{{$branch}}</td>
                             <td>{{$availableBalance}}</td>
-                            <td><a href="#">Click here</a></td>
+                            <td><a href="{{ route('notification') }}">Click here</a></td>
                         </tr>
                     </tbody>
                 </table>

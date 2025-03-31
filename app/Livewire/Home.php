@@ -4,15 +4,19 @@ namespace App\Livewire;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use App\Livewire\Login;
+use App\Models\User; // Make sure to import User model
+use App\Models\Group; // Make sure to import Group model
+use resources\views\livewire\kyc;
+
 
 
 class Home extends Component
 {
     public $user_id;
-    public $group_id='ambari001';
-    public $group_password='ambari001';
     public $password;
-    public $isGroupLogin = false; // Toggle between user and group login
+   // public $group_id='ambari001';
+   // public $group_password='ambari001';
+    //public $isGroupLogin = false; // Toggle between user and group login
 
     //public $user_id;
     //public $password;
@@ -24,7 +28,16 @@ class Home extends Component
             'password' => ['required'],
         ]);
 
-        if (Auth::attempt(['user_id' => $this->user_id, 'password' => $this->password])) {
+        if (Auth::attempt(['user_id' => $this->user_id, 'password' => $this->password])) 
+        {
+            // Retrieve the authenticated user
+        $user = Auth::user() ;
+            // Check if KYC is completed
+        if (!$user->is_kyc_completed) {
+            $this->showKYCModal = true; // Show the KYC modal (in kyc component)
+            return;// redirect()->route('kyc'); // Redirect to KYC component
+        }
+
             //$this->dispatch('notify', ['message' => 'Successfully logged in!']);
             return redirect()->route('dashboard');
         }

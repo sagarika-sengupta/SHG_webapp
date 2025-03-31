@@ -13,7 +13,7 @@ class Register extends Component
     public $village;
     public $district;
     public $state;
-    public $monthly_contribution;
+    //public $monthly_contribution;
     public $group_id;
     public $user_id;
     public $password;
@@ -25,7 +25,7 @@ class Register extends Component
         'village' => 'required',
         'district' => 'required',
         'state' => 'required',
-        'monthly_contribution' => 'required|numeric',
+        //'monthly_contribution' => 'required|numeric',
         'password' => 'required|min:8|confirmed',
     ];
 
@@ -48,7 +48,7 @@ class Register extends Component
             'village' => $this->village,
             'district' => $this->district,
             'state' => $this->state,
-            'monthly_contribution' => $this->monthly_contribution,
+           // 'monthly_contribution' => $this->monthly_contribution,
             'group_id' => $this->group_id,
             'user_id' => $this->user_id,
             'password' => bcrypt($this->password),
@@ -63,6 +63,8 @@ class Register extends Component
         \Log::info("Generated User ID: " . $this->user_id); // Log the user ID for debugging
         session()->flash('message', 'Account created successfully!');
         session()->flash('user_id', $this->user_id);
+
+        //return redirect()->route('home');
         // Now dispatch event with user_id
         //$this->dispatch('show-user-id-modal', ['user_id' => $this->user_id]);
          // Trigger a Livewire event to show the modal

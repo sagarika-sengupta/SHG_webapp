@@ -23,13 +23,13 @@ class Contribution extends Component
 
         $user = Auth::user(); // ✅ Get authenticated user
         $userId = $user->user_id;
-        $registeredAmount = $user->monthly_contribution; // ✅ Get amount from user profile (assumed column)
+       // $registeredAmount = $user->monthly_contribution; // ✅ Get amount from user profile (assumed column)
 
         // ✅ Check if selected amount matches the registered amount
-        if ($this->amount != $registeredAmount) {
-            session()->flash('payment-invalid_amount', "Invalid amount! You can only contribute ₹$registeredAmount.");
-            return;
-        }
+        //if ($this->amount != $registeredAmount) {
+          //  session()->flash('payment-invalid_amount', "Invalid amount! You can only contribute ₹$registeredAmount.");
+          //  return;
+        //}
 
         try {
             // Generate the transaction ID
