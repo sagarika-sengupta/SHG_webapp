@@ -30,7 +30,11 @@ class User extends Authenticatable
         'user_id',
         'password',
     ];
-
+    protected $primaryKey = 'user_id';
+    public $incrementing = false; // Set to false if group_id is not auto-incrementing
+    public $timestamps = false; // Set to true if you want to use timestamps
+    protected $keyType = 'string'; // Set to 'string' if group_id is a string type
+   
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -53,8 +57,21 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+            public function getAuthIdentifierName()
+        {
+            return 'user_id';
+        }
+                public function getAuthIdentifier()
+        {
+            return $this->getAttribute($this->getAuthIdentifierName());
+        }
+        public function getAuthPassword()
+        {
+            return $this->password;
+        }
+
     public function groups()
     {
-        return $this->belongsToMany(Group::class, 'group_user', 'user_id', 'group_id');
+        return $this->belongsToMany(GroupTable::class, 'group_user', 'user_id', 'group_id');
     }
 }

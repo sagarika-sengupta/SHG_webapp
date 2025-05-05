@@ -8,11 +8,11 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav">
                         <li class="nav-item"><a class="nav-link" href="{{ route('home') }}">Home</a></li>
-                        @auth
+                        @if(session('user_id'))
                             @if($dashboard)
                             <li class="nav-item"><a class="nav-link" href="{{ route('dashboard') }}">Dashboard</a></li>
                             @endif
-                        @endauth
+                        @endif
                         @if($account)
                         <li class="nav-item"><a class="nav-link" href="{{ route('account') }}">Accounts</a></li> 
                         @endif

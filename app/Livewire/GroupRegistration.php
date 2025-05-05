@@ -2,61 +2,72 @@
 
 namespace App\Livewire;
 
-use App\Models\Group;
+use App\Models\GroupTable;
 use Illuminate\Support\Facades\Hash;
 use Livewire\Component;
+use Illuminate\Support\Facades\Auth;
+//use Livewire\Component;
+use Illuminate\Support\Str;
+use App\Models\User; // Make sure to import User model
+use Illuminate\Support\Facades\Log; // Import Log facade
+use Illuminate\Support\Facades\DB; // Import DB facade
+//use Illuminate\Database\Eloquent\Model;
+
+
 
 class GroupRegistration extends Component
 {
+    
     public $group_id;
     public $group_name;
     public $village;
     public $district;
     public $state;
-    public $members = []; // Array to store member names
+    public $user_id; // ✅ Add this
     public $group_password;
-    public $group_password_confirmation; // For confirming the password
+    public $group_password_confirmation;
 
     protected $rules = [
-        'group_id' => 'required|min:8|unique:groups,group_id',
         'group_name' => 'required|min:5',
         'village' => 'required',
         'district' => 'required',
         'state' => 'required',
-        'group_password' => 'required|min:8|same:group_password_confirmation', // Validate password and confirmation
-        'group_password_confirmation' => 'required|min:8', // Confirm password field
-        'members' => 'required|array|min:1', // Ensure at least one member is added
-        'members.*' => 'required|string|min:3', // Validate each member name
+        'user_id' => 'required|exists:users,user_id', // ✅ Validate it exists
+        'group_password' => 'required|min:8|same:group_password_confirmation',
+        'group_password_confirmation' => 'required|min:8',
     ];
 
-    public function addMember()
+    public function group_register()
     {
-        $this->members[] = ''; // Add an empty field for a new member
-    }
+        try {
+            $this->group_id = strtolower(substr(str_replace(' ', '_', $this->group_name), 0, 4)) . rand(100,999);
+            $this->validate();
 
-    public function removeMember($index)
-    {
-        unset($this->members[$index]); // Remove the member at the given index
-        $this->members = array_values($this->members); // Reindex the array
-    }
+            // ✅ Create group
+            $group = GroupTable::create([
+                'group_id' => $this->group_id,
+                'group_name' => $this->group_name,
+                'village' => $this->village,
+                'district' => $this->district,
+                'state' => $this->state,
+                'user_id' => $this->user_id, // ✅ Use validated user_id
+                'group_password' => Hash::make($this->group_password),
+            ]);
 
-    public function register()
-    {
-        $this->validate();
+            // ✅ Update user role
+            $user = User::where('user_id', $this->user_id)->first();
+            if ($user) {
+                $user->role = 1;
+                $user->save();
+            }
 
-        // Create the group
-        $group = Group::create([
-            'group_id' => $this->group_id,
-            'group_name' => $this->group_name,
-            'village' => $this->village,
-            'district' => $this->district,
-            'state' => $this->state,
-            'members' => json_encode($this->members), // Store members as JSON
-            'group_password' => Hash::make($this->group_password), // Hash the password before saving
-        ]);
-
-        session()->flash('message', 'Group registered successfully!');
-        return redirect()->route('home');
+            session()->flash('message', 'Account created successfully!');
+            session()->flash('group_id', $this->group_id);
+            return ['group_id' => $this->group_id]; //  Return group_id
+        } catch (\Exception $e) {
+            Log::error('Error creating group: ' . $e->getMessage());
+            session()->flash('error', 'An error occurred while creating the group. Please try again.');
+        }
     }
 
     public function render()

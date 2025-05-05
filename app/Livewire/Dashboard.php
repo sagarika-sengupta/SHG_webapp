@@ -19,7 +19,22 @@ class Dashboard extends Component
 
     public function mount()
     {
-        $user = Auth::User();
+        $userId = session()->get('user_id');
+
+        if ($userId) {
+            $user = User::find($userId);
+
+            if ($user) {
+            $this->branch = $user->village; // Assuming 'village' is the branch
+            $this->accountNumber = $user->user_id;
+            $this->userId = $user->user_id;
+
+            // Manually set other session values if needed
+            session()->put('user_logged_in', true);
+            session()->put('user_name', $user->name);
+            session()->put('is_kyc_completed', $user->is_kyc_completed);
+            }
+        }
         //$user = Auth::users(); // ✅ Get the authenticated user
 
         if ($user) {

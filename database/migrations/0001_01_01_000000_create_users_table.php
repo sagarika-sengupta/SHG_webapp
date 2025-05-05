@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id();
+         //   $table->id();
             $table->string('name');
             $table->string('phone')->unique();
             $table->string('village');
@@ -20,7 +20,8 @@ return new class extends Migration
             $table->string('state');
           //  $table->integer('monthly_contribution');
             $table->string('group_id')->nullable();
-            $table->string('user_id')->unique();
+            $table->string('user_id')->primary();
+            $table->integer('role')->default('0'); // 0 for user, 1 for group, 2 for admin
             //$table->string('email')->unique();
             //$table->timestamp('email_verified_at')->nullable();
             $table->string('password');

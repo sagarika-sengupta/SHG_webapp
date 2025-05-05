@@ -1,15 +1,30 @@
 <!-- filepath: c:\Users\lenovo\OneDrive\Documents\prac001\resources\views\livewire\group-registration.blade.php -->
+
+<!-- <div> -->
 <div>
     <div class="container mt-5">
         <div class="card p-4">
             <h2 class="text-center mb-4">Group Registration</h2>
-            <form wire:submit.prevent="register">
-                <!-- Group ID -->
-                <div class="mb-3">
-                    <label for="group_id" class="form-label">Group ID:</label>
-                    <input type="text" id="group_id" class="form-control" wire:model="group_id" required>
-                    @error('group_id') <div class="text-danger small">{{ $message }}</div> @enderror
-                </div>
+                        <!-- Success Message -->
+        @if (session()->has('message'))
+            <div class="alert alert-success">
+                {{ session('message') }}
+            </div>
+        @endif
+
+        <!-- Display User ID After Registration -->
+        @if (session()->has('group_id'))
+            <div class="alert alert-success mt-3">
+                <strong>Your Group ID: </strong> {{ session('group_id') }}
+            </div>
+        @endif
+        <!-- Error Message -->
+        @if (session()->has('error'))
+            <div class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+        @endif
+            <form wire:submit.prevent="group_register">
 
                 <!-- Group Name -->
                 <div class="mb-3">
@@ -31,25 +46,17 @@
                     <input type="text" id="district" class="form-control" wire:model="district" required>
                     @error('district') <div class="text-danger small">{{ $message }}</div> @enderror
                 </div>
-
+                <!-- User ID -->
+                <div class="mb-3">
+                    <label for="user_id" class="form-label">User ID:</label>
+                    <input type="text" id="user_id" class="form-control" wire:model="user_id" required>
+                    @error('user_id') <div class="text-danger small">{{ $message }}</div> @enderror
+                </div>
                 <!-- State -->
                 <div class="mb-3">
                     <label for="state" class="form-label">State:</label>
                     <input type="text" id="state" class="form-control" wire:model="state" required>
                     @error('state') <div class="text-danger small">{{ $message }}</div> @enderror
-                </div>
-
-                <!-- Members -->
-                <div class="mb-3">
-                    <label class="form-label">Members:</label>
-                    @foreach ($members as $index => $member)
-                        <div class="d-flex align-items-center mb-2">
-                            <input type="text" class="form-control me-2" wire:model="members.{{ $index }}" placeholder="Member Id" required>
-                            <button type="button" class="btn btn-danger btn-sm" wire:click="removeMember({{ $index }})">Remove</button>
-                        </div>
-                        @error('members.' . $index) <div class="text-danger small">{{ $message }}</div> @enderror
-                    @endforeach
-                    <button type="button" class="btn btn-success btn-sm mt-2" wire:click="addMember">Add Member</button>
                 </div>
 
                 <!-- Group Password -->
@@ -78,4 +85,5 @@
             @endif
         </div>
     </div>
+</div>
 </div>

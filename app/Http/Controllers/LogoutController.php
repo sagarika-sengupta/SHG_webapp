@@ -9,7 +9,7 @@ class LogoutController extends Controller
 {
     public function logout()
     {
-        Auth::logout();
+        session()->forget(['user_id', 'user_logged_in', 'user_name', 'is_kyc_completed']);
         session()->invalidate();
         session()->regenerateToken();
         return redirect('/');

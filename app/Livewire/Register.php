@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Illuminate\Support\Str;
 use App\Models\User; // Make sure to import User model
+use Illuminate\Support\Facades\Log; // Import Log facade
 
 class Register extends Component
 {
@@ -32,7 +33,7 @@ class Register extends Component
     public function register()
     {
        
-
+        try {
         // Generate a unique user ID dynamically
         $this->user_id = strtolower(substr(str_replace(' ', '_', $this->name), 0, 4)) . rand(100,999);
 
@@ -41,6 +42,16 @@ class Register extends Component
          //   $this->user_id = strtolower(str_replace(' ', '_', $this->name)) . str::random(10);
         //}
         $this->validate();
+
+        // Check if the phone number already exists in the database
+        if (User::where('phone', $this->phone)->exists()) {
+            session()->flash('error', 'This phone number is already registered. Please use a different one.');
+            return;
+        }
+        //else if ($this->password !== $this->password_confirmation) {
+          //  session()->flash('error', 'Passwords do not match. Please try again.');
+          //  return;
+        //}
         // Create the user
         $user = User::create([
             'name' => $this->name,
@@ -63,7 +74,19 @@ class Register extends Component
         \Log::info("Generated User ID: " . $this->user_id); // Log the user ID for debugging
         session()->flash('message', 'Account created successfully!');
         session()->flash('user_id', $this->user_id);
-
+    }
+    //catch (QueryException $e) {
+        // Check if the error is due to duplicate phone number
+      //  if ($e->errorInfo[1] == 1062) { // MySQL error code for duplicate entry
+      //      session()->flash('error', 'The phone number is already registered. Please use a different number.');
+      //  } else {
+      //      session()->flash('error', 'Database error: ' . $e->getMessage());
+       // }
+    //}
+    catch(\Exception $e){
+        log::error('Error creating user: ' . $e->getMessage());
+        session()->flash('error', 'An error occurred while creating the account. Please try again.');
+    }
         //return redirect()->route('home');
         // Now dispatch event with user_id
         //$this->dispatch('show-user-id-modal', ['user_id' => $this->user_id]);

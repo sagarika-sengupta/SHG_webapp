@@ -21,11 +21,15 @@ class kyc extends Component
 
         // Save KYC Data
         //auth()->user()->update(['is_kyc_completed' => 1]);
-        if (Auth::check()) {
+        $userId = session('user_id');
+        if ($userId) {
             // Update the authenticated user's KYC status
-            $user = Auth::user();
-            $user->update(['is_kyc_completed' => 1]);
-            $user->update(['kyc_data' => $this->kyc_data]);
+            $user = User::where('user_id', $userId)->first();
+            if ($user) {
+                $user->update(['is_kyc_completed' => 1]);
+                $user->update(['kyc_data' => $this->kyc_data]);
+            }
+
         }
         // Hide modal after submission
         $this->showModal = false;
