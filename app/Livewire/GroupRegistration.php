@@ -60,7 +60,11 @@ class GroupRegistration extends Component
                 $user->role = 1;
                 $user->save();
             }
-
+            // Update pivot table with role
+            DB::table('group_user')->updateOrInsert(
+                ['group_id' => $this->group_id, 'user_id' => $this->user_id],
+                ['role' => 'leader']
+            );
             session()->flash('message', 'Account created successfully!');
             session()->flash('group_id', $this->group_id);
             return ['group_id' => $this->group_id]; //  Return group_id

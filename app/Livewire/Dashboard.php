@@ -13,17 +13,20 @@ class Dashboard extends Component
     public $availableBalance;
     public $userId;
     public $branch;
+    public $Groups = [];
     public $accountNumber;
     public $notificationCount;
+    public $groupBalances = [];
 
 
     public function mount()
     {
+        
         $userId = session()->get('user_id');
 
         if ($userId) {
             $user = User::find($userId);
-
+            $this->Groups = $user?->groups ?? [];
             if ($user) {
             $this->branch = $user->village; // Assuming 'village' is the branch
             $this->accountNumber = $user->user_id;
@@ -45,14 +48,22 @@ class Dashboard extends Component
         //$accountNumber = $users->user_id;
         //$this->userId = $users->user_id;
 
-        // Calculate the available balance
-        $this->availableBalance = UserTransaction::where('user_id', $this->userId)
-            ->where('transaction_type', 'deposit')
-            ->sum('amount');
+        // Group-wise available balance
+        foreach ($this->Groups as $group) {
+            $amount = UserTransaction::where('user_id', $user->user_id)
+                ->where('group_id', $group->group_id)
+                ->where('transaction_id', 'not like', 'pending_%') // Exclude all pending_ transactions // Exclude pending
+                ->sum('amount');
+
+            $this->groupBalances[] = [
+                'group_name' => $group->group_name,
+                'amount' => $amount
+            ];
         
          // Fetch the count of notifications for the logged-in user
          $this->notificationCount = UserTransaction::where('user_id', auth()->id())->count();
     }
+}
 
     public function render()
     {

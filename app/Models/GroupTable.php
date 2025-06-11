@@ -14,12 +14,12 @@ class GroupTable extends Model
     protected $table='groups';
     protected $primaryKey = 'group_id';
     public $incrementing = false; // Set to false if group_id is not auto-incrementing
-    public $timestamps = false; // Set to true if you want to use timestamps
+    public $timestamps = true; // Set to true if you want to use timestamps
     protected $keyType = 'string'; // Set to 'string' if group_id is a string type
     protected $fillable = ['group_id','group_name','user_id','village','district','state','group_password'];
 
     public function users()
     {
-        return $this->belongsToMany(User::class, 'group_user', 'group_id', 'user_id');
+        return $this->belongsToMany(User::class, 'group_user', 'group_id', 'user_id')->withPivot('role')->withTimestamps();
     }
 }

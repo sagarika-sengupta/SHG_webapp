@@ -32,6 +32,7 @@ class MemberDisplay extends Component
             $this->group=$group;
             $this->group_id = $group->group_id;
             $this->group_name = $group->group_name;
+            $this->role = $group->role; //in blade file------> <td>{{ $member->pivot->role }}</td> 
             //$this->members = $this->group->users;
            // $this->village = $this->group->village;
             //$this->state = $this->group->state;

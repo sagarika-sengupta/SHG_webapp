@@ -31,6 +31,8 @@ use App\Livewire\MemberDisplay;
 use App\Http\Controllers\GroupLogoutController;
 use App\Livewire\GroupView;
 use App\Livewire\UserGroupView;
+use App\Livewire\GroupTransactions;
+use App\Livewire\ApproveGroupTransactions;
 
 
 
@@ -70,7 +72,8 @@ Route::middleware(viewMiddleware::class)->group(function () {
 Route::get('/group-dashboard', GroupDashboard::class)->name('GroupDashboard');
 Route::get('/group-member', GroupMember::class)->name('group-member');
 Route::get('/member-display', MemberDisplay::class)->name('member-display');
-
+Route::get('/group-transactions', GroupTransactions::class)->name('group-transactions');
+Route::get('/approve-group-transactions',ApproveGroupTransactions::class)->name('approve-group-transactions');
 Route::get("/test", function () {
     return view('livewire.test');
 });

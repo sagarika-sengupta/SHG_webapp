@@ -9,7 +9,7 @@
 
             <!-- <button onclick="window.location.href='{{ route('contribution') }}'" class="btn btn-primary p-3 flex-fill rounded-0">Monthly Contribution</button> -->
             <button onclick="window.location.href='{{ route('member-display') }}'"class="btn btn-primary p-3 flex-fill rounded-0">Members</button>
-            <button onclick="window.location.href='{{ route('member-display') }}'"class="btn btn-primary p-3 flex-fill rounded-0">Group Transactions</button>
+            <button onclick="window.location.href='{{ route('group-transactions') }}'"class="btn btn-primary p-3 flex-fill rounded-0">Group Transactions</button>
             <button class="btn btn-primary p-3 flex-fill rounded-0">Group Balance</button>
         </div>
     </div>
@@ -28,7 +28,7 @@
             <div class="border border-primary bg-light p-3">
                 <div class="d-flex flex-column gap-3">
                     <button onclick="window.location.href='{{ route('group-member') }}'" class="btn btn-primary p-3 rounded-0">Add/Delete Members</button>
-                    <button onclick="window.location.href='{{ route('group-registration') }}'" class="btn btn-primary p-3 rounded-0">Group Registration</button>
+                    <button onclick="window.location.href='{{ route('approve-group-transactions') }}'" class="btn btn-primary p-3 rounded-0">Approve Group Transactions</button>
                     <!-- <button class="btn btn-primary p-3 rounded-0">View</button> -->
 
                     <!-- Logout Button with Correct Styling -->
@@ -48,11 +48,12 @@
         <div class="col-md-9">
             <div class="border border-primary bg-light p-3">
                 <h4 class="fw-bold text-primary">Account Summary</h4>
-                <table class="table table-bordered mt-3">
+                <table class="table table-bordered mt-3 text-center">
                     <thead class="table-primary">
                         <tr>
                             <th>Group_ID</th>
                             <th>Total Members</th>
+                            <th>Total Balance</th>
                             <th>Member Details</th>
                             <!-- <th>Transaction History</th> -->
                         </tr>
@@ -61,8 +62,9 @@
                         <tr>
                             <td>{{$group_id}}</td>
                             <td>{{$members_count}}</td>
+                            <td>{{$TotalAmount}}</td>
                             <td><a href="{{ route('member-display') }}">Click here</a></td>
-                            </tr>
+                        </tr>
                     </tbody>
                 </table>
             </div>

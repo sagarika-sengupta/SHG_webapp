@@ -9,6 +9,7 @@
                 <thead class="table-dark">
                     <tr>
                         <th>Group ID</th>
+                        <th>Group Name</th>
                         <th>Village</th>
                         <th>District</th>
                         <th>State</th>
@@ -18,6 +19,7 @@
                     @forelse($this->getGroupsofLeader() as $group)
                         <tr>
                             <td>{{ $group->group_id }}</td>
+                            <td>{{ $group->group_name }}</td>
                             <td>{{ $group->village }}</td>
                             <td>{{ $group->district }}</td>
                             <td>{{ $group->state }}</td>

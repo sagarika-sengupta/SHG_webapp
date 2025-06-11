@@ -10,6 +10,26 @@
                 <option value="1000">Rs. 1000</option>
             </select>
         </div>
+
+        <div class="d-flex justify-content-center mt-4">
+            <select class="form-select w-50" wire:model="group_id">
+                <option selected disabled>Select Group</option>
+                @foreach($groups as $group)
+                    <option value="{{ $group['group_id'] }}">
+                        {{ $group['group_name'] }} - {{ $group['village'] }}, {{ $group['district'] }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="d-flex justify-content-center mt-4">
+            <select class="form-select w-50" id="transaction_type" wire:model="transaction_type">
+                <option selected disabled>Deposit Type</option>
+                <option value="RD">Reccuring Deposit</option>
+                 <option value="FD">Fixed Deposit</option> 
+            </select>
+        </div>
+
         <div class="text-center mt-4">
             <button class="btn btn-success px-5" wire:click="makePayment">Pay Now</button>
         </div>

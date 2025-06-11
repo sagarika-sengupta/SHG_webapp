@@ -14,13 +14,13 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
          //   $table->id();
             $table->string('name');
-            $table->string('phone')->unique();
+            $table->string('phone',110)->unique();
             $table->string('village');
             $table->string('district');
             $table->string('state');
           //  $table->integer('monthly_contribution');
-            $table->string('group_id')->nullable();
-            $table->string('user_id')->primary();
+            $table->string('group_id',110)->nullable();
+            $table->string('user_id',110)->primary();
             $table->integer('role')->default('0'); // 0 for user, 1 for group, 2 for admin
             //$table->string('email')->unique();
             //$table->timestamp('email_verified_at')->nullable();
@@ -32,14 +32,14 @@ return new class extends Migration
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
-            $table->string('user_id')->primary();
+            $table->string('user_id',110)->primary();
             $table->string('token');
             $table->timestamp('created_at')->nullable();
         });
 
         Schema::create('sessions', function (Blueprint $table) {
-            $table->string('id')->primary();
-            $table->foreignId('user_id')->nullable()->index();
+            $table->string('id',110)->primary();
+            $table->foreignId('user_id',110)->nullable()->index();
             $table->string('ip_address', 45)->nullable();
             $table->text('user_agent')->nullable();
             $table->longText('payload');

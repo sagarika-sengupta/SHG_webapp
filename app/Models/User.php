@@ -32,7 +32,7 @@ class User extends Authenticatable
     ];
     protected $primaryKey = 'user_id';
     public $incrementing = false; // Set to false if group_id is not auto-incrementing
-    public $timestamps = false; // Set to true if you want to use timestamps
+    public $timestamps = true; // Set to true if you want to use timestamps
     protected $keyType = 'string'; // Set to 'string' if group_id is a string type
    
     /**
@@ -72,6 +72,6 @@ class User extends Authenticatable
 
     public function groups()
     {
-        return $this->belongsToMany(GroupTable::class, 'group_user', 'user_id', 'group_id');
+        return $this->belongsToMany(GroupTable::class, 'group_user', 'user_id', 'group_id')->withPivot('role')->withTimestamps();
     }
 }

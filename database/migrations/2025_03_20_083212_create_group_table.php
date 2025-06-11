@@ -13,13 +13,14 @@ return new class extends Migration
     {
         // Create the groups table
         Schema::create('groups', function (Blueprint $table) {
-           // $table->id();
-            $table->string('group_id')->primary(); // Unique group identifier and primary key
+          //  $table->id();
+            $table->string('group_id',110)->primary(); // Unique group identifier and primary key
             $table->string('group_name'); // Name of the group
+            $table->string('group_password');
             $table->string('village'); // Location of the group
             $table->string('district'); // Location of the group
             $table->string('state'); // Location of the group
-            $table->string('user_id'); // Foreign key for user
+            $table->string('user_id',110); // Foreign key for user
             $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade');
             $table->integer('user_count')->default(0); // Number of users in the group
             $table->json('members')->nullable(); // JSON column to store registered users
@@ -31,8 +32,9 @@ return new class extends Migration
         // Create a pivot table for group-user relationships
         Schema::create('group_user', function (Blueprint $table) {
             $table->id();
-            $table->string('group_id'); // Foreign key for group
-            $table->string('user_id'); // Foreign key for user
+            $table->string('group_id',110); // Foreign key for group
+            $table->string('user_id',110); // Foreign key for user
+            $table->string('role')->default('member'); // Role of the user in the group (e.g., member, admin)
             $table->timestamps();
 
             // Foreign key constraints

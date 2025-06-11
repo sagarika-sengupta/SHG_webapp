@@ -2,18 +2,60 @@
 
 namespace App\Livewire;
 
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
 use App\Models\UserTransaction;
 use Livewire\Component;
 use Carbon\Carbon;
-use App\Models\User; // Make sure to import User model
+use App\Models\User;
+use Illuminate\Support\Str; //used for generating uuid
 
 class Contribution extends Component
 {
     public $user_id;
-    public $amount;
-    public $transaction_type;
-    public $transactionId;
+    public $amount=[200, 500, 1000];
+    public $transaction_type=['RD','FD'];
+    public $transactionId='pending'; // Temporary placeholder
+    public $paymentId;
+    public $group_id; // For dropdown selection
+    public $groups = []; // List of groups for the dropdown
+
+    public function mount()
+    {
+      
+        $this->groups = $this->getGroupsForCurrentUser();
+            // ✅ If there's only one group(in drop down), preselect it
+        if (count($this->groups) === 1) {
+        $this->group_id = $this->groups[0]['group_id'];
+        }
+        $this->amount = $this->amount[0]; //select 0th index's value by default
+        $this->transaction_type = $this->transaction_type[0];
+
+    }
+
+
+    private function getGroupsForCurrentUser()
+    {
+        $userId = Session::get('user_id');
+        $user = User::with('groups')->where('user_id', $userId)->first();
+
+        if (!$user) return [];
+
+        // Map each group associated with the user to a simplified array structure
+       // $group is an individual item from the $user->groups collection.
+        // $user->groups is a collection of all groups associated with the user.
+        // function($group) is a callback function that processes each group in the $user->groups collection.
+        //The map() method is used to transform the collection into a new structure.
+        return $user->groups->map(function ($group) {
+            return [
+                'group_id' => $group->group_id,
+                'group_name' => $group->group_name,
+                'village' => $group->village,
+                'district' => $group->district,
+                'state' => $group->state,
+            ];
+        })->toArray();
+    }
 
     public function makePayment()
     {
@@ -22,65 +64,58 @@ class Contribution extends Component
             return;
         }
 
-        $sessionUserId = session('user_id'); 
-        // 2. Check if user exists in the users table
-        $user = User::where('user_id', $sessionUserId)->first(); // ✅ Retrieve user from database using session user_id
-       if(!$user) {
-            session()->flash('payment-error', 'User not found. login again.');
+        $UserId = session('user_id');
+        $user = User::where('user_id', $UserId)->first();
+
+        if (!$user) {
+            session()->flash('payment-error', 'User not found. Login again.');
             return;
         }
-        // $registeredAmount = $user->monthly_contribution; // ✅ Get amount from user profile (assumed column)
-        $userId = $user->user_id; // ✅ Get the authenticated user's ID
 
+        $userId = $user->user_id;
 
         try {
-            // Generate the transaction ID
-            $transactionId = $this->generateTransactionId($userId); //send the user ID
+            $transactionId = 'pending_' . Str::uuid()->toString(); // ✅ FIXED
+            $paymentId = $this->generatePaymentId($userId); //stores value of generatePaymentId method in $paymentId variable
 
-            // ✅ Save the transaction
             UserTransaction::create([
+                'payment_id' => $paymentId,
                 'transaction_id' => $transactionId,
+             //   'transaction_type' => $this->transaction_type,
                 'user_id' => $userId,
+                'group_id' => $this->group_id, // Save selected group
                 'amount' => $this->amount,
+             //   'transaction_id' => 'pending', // Temporary placeholder
                 'transaction_type' => $this->transaction_type,
             ]);
 
-            session()->flash('payment-success', 'Payment successful!');
+            session()->flash('payment-success', 'Payment initiated. Waiting for confirmation!');
         } catch (\Exception $e) {
-            session()->flash('payment-error', 'An error occurred.');
+            \Log::error('Payment failed: ' . $e->getMessage());
+            session()->flash('payment-error', 'An error occurred: ' . $e->getMessage());
+
         }
     }
-    private function generateTransactionId($userId) //pass the user ID
+
+    private function generatePaymentId($userId)
     {
-        $prefix = 'TRNRD';
-        $user_id = $userId; // Get the authenticated user's ID
-        $date = date('dmY'); // Format: ddMMyyyy
-        // Get the last transaction for today
-            // Get the last transaction based on the latest created_at timestamp
-        $lastTransaction = UserTransaction::latest('created_at')->first();
-
-        // Extract the last 3 digits, if no transaction exists, start from 001
-        $lastNumber = $lastTransaction ? intval(substr($lastTransaction->transaction_id, -3)) : 0;
-
-        
-        // Increment and format it to always have 3 digits (001, 002, 003, ...)
-        $newNumber = str_pad($lastNumber + 1, 3, '0', STR_PAD_LEFT);
-        $transactionId = $prefix . $user_id . $date . $newNumber;
-
-        return $transactionId;
-
-        //$lastTransaction = UserTransaction::whereDate('created_at', Carbon::today())
-          // ->orderBy('id', 'desc')
-           //->first();
-    
-        // If no previous transaction, start with 001
-        //$lastNumber = $lastTransaction ? intval(substr($lastTransaction->transaction_id, -3)) : 0;
-        //$newNumber = str_pad($lastNumber + 1, 3, '0', STR_PAD_LEFT);
-    
-        $transactionId = $prefix . $date;// $newNumber;
-        //. $date
-        //\Log::info("Generated Transaction ID: " . $transactionId); // Debugging
-    
+        $prefix = 'PAYMENT';
+        $userId = strtoupper($userId);
+        $groupId = strtoupper($this->group_id);
+        $user_GroupId = $userId . '_' . $groupId . '_';
+        $date = date('dmY');
+         // Keep generating a new ID until we find one that's unique
+            do {
+                $random = str_pad(mt_rand(1, 999), 3, '0', STR_PAD_LEFT);
+                $transactionId = $prefix . $user_GroupId . $date . $random;
+            } while (UserTransaction::where('transaction_id', $transactionId)->exists());
+        //   // Count existing transactions for this user+group+date
+        //  $count = UserTransaction::where('user_id', $userId)
+        // ->where('group_id', $groupId)
+        // ->whereDate('created_at', today())
+        // ->count();
+        // $newNumber = str_pad($count + 1, 3, '0', STR_PAD_LEFT);
+        // return $prefix . $user_GroupId . $date . $newNumber;
         return $transactionId;
     }
 
@@ -89,44 +124,3 @@ class Contribution extends Component
         return view('livewire.contribution');
     }
 }
-/*
-use Livewire\Component;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Http;
-
-class Contribution extends Component
-{
-    public $amount;
-
-    public function makePayment()
-    {
-        if (!$this->amount) {
-            $this->dispatchBrowserEvent('payment-error', ['message' => 'Please select an amount to proceed with payment.']);
-            return;
-        }
-
-        $userId = Auth::user_id(); // Get logged-in user ID
-
-        try {
-            $response = Http::post(url('/save-transaction'), [
-                'user_id' => $userId,
-                'amount' => $this->amount,
-                '_token' => csrf_token()
-            ]);
-
-            if ($response->successful()) {
-                $this->dispatchBrowserEvent('payment-success', ['message' => 'Payment successful!']);
-            } else {
-                $this->dispatchBrowserEvent('payment-error', ['message' => 'Payment failed.']);
-            }
-        } catch (\Exception $e) {
-            $this->dispatchBrowserEvent('payment-error', ['message' => 'An error occurred.']);
-        }
-    }
-
-    public function render()
-    {
-        return view('livewire.contribution');
-    }
-}
-*/

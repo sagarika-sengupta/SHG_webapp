@@ -7,6 +7,7 @@ use App\Models\GroupTable;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Middleware\GroupAuth;
+use App\Models\UserTransaction;
 
 class GroupDashboard extends Component
 {
@@ -17,7 +18,9 @@ class GroupDashboard extends Component
     public $state;
     public $members_count;
     public $members;
-
+    public $TotalAmount;
+    
+//added a pivot table in models -> User & Group  EG:  return $this->belongsToMany(GroupTable::class, 'group_user', 'user_id', 'group_id')->withPivot('role')->withTimestamps();
 
     public function mount()
     {
@@ -27,6 +30,9 @@ class GroupDashboard extends Component
         //IMPORTANT:Use the line below to acccess the pivot table(group_user) and get the users in the group
         $group_user = GroupTable::with('users');
         $group = GroupTable::find(session('group_id'));
+
+        $this->TotalAmount = UserTransaction::where('group_id', session('group_id'))
+            ->sum('amount');
         
         //$user = Auth::users(); // ✅ Get the authenticated user
         

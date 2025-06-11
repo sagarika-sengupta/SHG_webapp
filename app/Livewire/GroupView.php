@@ -12,7 +12,7 @@ class GroupView extends Component
     {
         $userId = Session::get('user_id');
         //return DB::select('SELECT * FROM groups WHERE user_id = ?', [$userId]);
-        return GroupTable::where('user_id', $userId)->get(['group_id', 'village', 'district', 'state']);
+        return GroupTable::where('user_id', $userId)->get(['group_id', 'group_name', 'village', 'district', 'state']);
     }
     public function render()
     {

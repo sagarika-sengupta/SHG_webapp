@@ -27,6 +27,7 @@
                     <th scope="col">Name</th>
                     <th scope="col">Village</th>
                     <th scope="col">State</th>
+                    <th scope="col">Role</th>
                 </tr>
             </thead>
             <tbody>
@@ -37,6 +38,7 @@
                         <td>{{ $member->name }}</td>
                         <td>{{ $member->village }}</td>
                         <td>{{ $member->state }}</td>
+                        <td>{{ $member->pivot->role }}</td> 
                     </tr>
                 @endforeach
             </tbody>

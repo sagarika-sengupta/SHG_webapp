@@ -31,7 +31,7 @@ class UserGroupView extends Component
                     'district' => $group->district,
                     'state' => $group->state,
                 ];
-            });
+            })->toarray();
         }
     }
   //  $group = GroupTable::with('users')->find('group_id');
