@@ -33,6 +33,8 @@ use App\Livewire\GroupView;
 use App\Livewire\UserGroupView;
 use App\Livewire\GroupTransactions;
 use App\Livewire\ApproveGroupTransactions;
+use App\Http\Middleware\userLogin;
+use App\Http\Middleware\groupLogin;
 
 
 
@@ -48,7 +50,7 @@ Route::get('/group-registration', GroupRegistration::class)->name('group-registr
 //Route::get('/notification', Notification::class)->name('notification');
 //Route::get('/kyc', kyc::class)->name('kyc');
 
-//Route::middleware(userLogin::class)->group(function () {
+Route::middleware(userLogin::class)->group(function () {
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
     Route::get('/account', Accounts::class)->name('account');
     Route::get('/settings', Settings::class)->name('settings');
@@ -60,20 +62,23 @@ Route::get('/group-registration', GroupRegistration::class)->name('group-registr
     Route::get('/notification', Notification::class)->name('notification');
     Route::get('/group-view',GroupView::class)->name('group-view');
     Route::get('/user-group-view',UserGroupView::class)->name('user-group-view');
-    //});
-
-Route::middleware(viewMiddleware::class)->group(function () {
-
-    Route::post('/group_logout', [GroupLogoutController::class, 'group_logout'])//group_logout is the method in GroupLogoutController
-    ->name('group_logout');
-    
 });
 
+//Route::middleware(viewMiddleware::class)->group(function () {
+
+    
+    
+//});
+
+Route::middleware(groupLogin::class)->group(function (){
 Route::get('/group-dashboard', GroupDashboard::class)->name('GroupDashboard');
 Route::get('/group-member', GroupMember::class)->name('group-member');
 Route::get('/member-display', MemberDisplay::class)->name('member-display');
 Route::get('/group-transactions', GroupTransactions::class)->name('group-transactions');
 Route::get('/approve-group-transactions',ApproveGroupTransactions::class)->name('approve-group-transactions');
+Route::post('/group_logout', [GroupLogoutController::class, 'group_logout'])//group_logout is the method in GroupLogoutController
+    ->name('group_logout');
 Route::get("/test", function () {
     return view('livewire.test');
+});
 });

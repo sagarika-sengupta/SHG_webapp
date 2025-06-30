@@ -19,6 +19,7 @@ class GroupDashboard extends Component
     public $members_count;
     public $members;
     public $TotalAmount;
+    public $groupBalances;
     
 //added a pivot table in models -> User & Group  EG:  return $this->belongsToMany(GroupTable::class, 'group_user', 'user_id', 'group_id')->withPivot('role')->withTimestamps();
 
@@ -28,12 +29,17 @@ class GroupDashboard extends Component
         //$group = GroupTable::where('group_id', session('group_id'))->first();
         
         //IMPORTANT:Use the line below to acccess the pivot table(group_user) and get the users in the group
-        $group_user = GroupTable::with('users');
-        $group = GroupTable::find(session('group_id'));
+    $group = GroupTable::with('users')->find(session('group_id'));
 
-        $this->TotalAmount = UserTransaction::where('group_id', session('group_id'))
-            ->sum('amount');
-        
+    // Group-wise available balance
+    $this->TotalAmount = UserTransaction::where('group_id', $group->group_id)
+        ->where('status', 'approved') // Only approved transactions
+        ->sum('amount');
+
+    $this->groupBalances[] = [
+        'group_name' => $group->group_name,
+        'amount' => $this->TotalAmount
+    ];
         //$user = Auth::users(); // ✅ Get the authenticated user
         
         if ($group) {
@@ -46,8 +52,8 @@ class GroupDashboard extends Component
             $this->members = $group->members; // Assuming 'members' is a field in your group table  
         }
         //$branch = $users->village;
-        //$accountNumber = $users->user_id;
-        //$this->userId = $users->user_id;
+            $this->members_count = $group->users->count();
+            $this->members = $group->users; // Get users from the relationship
 
         // Calculate the available balance
        // $this->availableBalance = UserTransaction::where('user_id', $this->userId)

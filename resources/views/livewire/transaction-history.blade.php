@@ -9,6 +9,13 @@
                 <option value="{{ $group['group_id'] }}">{{ $group['group_name'] }}</option>
             @endforeach
         </select>
+            <!-- Status Filter -->
+    <select class="form-select w-25" wire:model="statusFilter">
+        <option value="">All Statuses</option>
+        <option value="approved">Approved</option>
+        <option value="pending">Pending</option>
+        <option value="rejected">Rejected</option>
+    </select>
         <button class="btn btn-primary" wire:click="filterByGroup">Filter</button>
     </div>
 

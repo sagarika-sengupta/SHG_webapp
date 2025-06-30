@@ -5,6 +5,16 @@
                 <i class="bi bi-arrow-left"></i> Back to Dashboard
             </a>
         </div>
+        <div>
+                    <!-- Status Filter -->
+    <select class="form-select w-25" wire:model="statusFilter">
+        <option value="">All Statuses</option>
+        <option value="approved">Approved</option>
+        <option value="pending">Pending</option>
+        <option value="rejected">Rejected</option>
+    </select>
+        <button class="btn btn-primary" wire:click="filterByGroup">Filter</button>
+    </div>
     <table class="table table-bordered table-striped">
         <thead class="table-primary text-white">
             <tr>
@@ -15,6 +25,7 @@
                 <th>Amount</th>
                 <th>Transaction Type</th>
                 <th>Created At</th>
+                <th> Status </th>
             </tr>
         </thead>
         <tbody>
@@ -27,13 +38,16 @@
                     <td>{{ $transaction->amount }}</td>
                     <td>{{ $transaction->transaction_type }}</td>
                     <td>{{ $transaction->created_at }}</td>
+                    <td>{{ $transaction->status}} </td>
                 </tr>
             @endforeach
-            <tr>
-                <td colspan="4" class="text-end fw-bold">Total Amount</td>
-                <td class="fw-bold">{{ $TotalAmount }}</td>
-                <td colspan="2"></td>
-            </tr>
+            @if ($statusFilter === '' || $statusFilter === 'approved')
+                <tr>
+                    <td colspan="4" class="text-end fw-bold">Total Amount</td>
+                    <td class="fw-bold">{{ $TotalAmount }}</td>
+                    <td colspan="2"></td>
+                </tr>
+            @endif
         </tbody>
     </table>
 </div>

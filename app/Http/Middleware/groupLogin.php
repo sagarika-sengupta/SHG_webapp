@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class userLogin
+class groupLogin
 {
     /**
      * Handle an incoming request.
@@ -14,11 +14,11 @@ class userLogin
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
-    { 
+    {
         // Check if user is logged in
         if (
-            session()->has('user_id') &&
-            session('user_logged_in') === true
+            session()->has('group_id') &&
+            session('group_logged_in') === true
         ) {
             return $next($request); // Allow access
         }

@@ -28,7 +28,7 @@ class GroupRegistration extends Component
     public $group_password_confirmation;
 
     protected $rules = [
-        'group_name' => 'required|min:5',
+        'group_name' => 'required|min:5|unique:groups,group_name',
         'village' => 'required',
         'district' => 'required',
         'state' => 'required',
@@ -40,6 +40,15 @@ class GroupRegistration extends Component
     public function group_register()
     {
         try {
+            // ✅ Fetch user and check KYC status
+        $user = User::where('user_id', $this->user_id)->first();
+
+        if (!$user || $user->is_kyc_completed != 1) {
+            session()->flash('error', 'User has not completed KYC. Cannot register group.');
+            return;
+        }
+
+        // Generate group ID
             $this->group_id = strtolower(substr(str_replace(' ', '_', $this->group_name), 0, 4)) . rand(100,999);
             $this->validate();
 
@@ -63,7 +72,9 @@ class GroupRegistration extends Component
             // Update pivot table with role
             DB::table('group_user')->updateOrInsert(
                 ['group_id' => $this->group_id, 'user_id' => $this->user_id],
-                ['role' => 'leader']
+                ['role' => 'leader',
+                'created_at' => now(),
+                'updated_at' => now()]
             );
             session()->flash('message', 'Account created successfully!');
             session()->flash('group_id', $this->group_id);

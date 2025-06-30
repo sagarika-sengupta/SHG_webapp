@@ -25,9 +25,9 @@ class Contribution extends Component
       
         $this->groups = $this->getGroupsForCurrentUser();
             // ✅ If there's only one group(in drop down), preselect it
-        if (count($this->groups) === 1) {
+       // if (count($this->groups) === 1) {
         $this->group_id = $this->groups[0]['group_id'];
-        }
+        //}
         $this->amount = $this->amount[0]; //select 0th index's value by default
         $this->transaction_type = $this->transaction_type[0];
 
