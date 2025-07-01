@@ -87,6 +87,6 @@ class GroupRegistration extends Component
 
     public function render()
     {
-        return view('livewire.group-registration');
+        return view('livewire.group-registration')->layout('components.layouts.app', ['theme' => 'theme-group']);
     }
 }

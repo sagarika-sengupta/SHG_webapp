@@ -99,6 +99,6 @@ class GroupMember extends Component
     }
     public function render()
     {
-        return view('livewire.group-member');
+        return view('livewire.group-member')->layout('components.layouts.app', ['theme' => 'theme-group']);;
     }
 }

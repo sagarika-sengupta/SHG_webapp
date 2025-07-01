@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('state'); // Location of the group
             $table->string('user_id',110); // Foreign key for user
             $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade');
+            $table->int('transaction_amount');
             $table->integer('user_count')->default(0); // Number of users in the group
             $table->json('members')->nullable(); // JSON column to store registered users
             //run this
@@ -35,6 +36,19 @@ return new class extends Migration
             $table->string('group_id',110); // Foreign key for group
             $table->string('user_id',110); // Foreign key for user
             $table->string('role')->default('member'); // Role of the user in the group (e.g., member, admin)
+            $table->timestamps();
+
+            // Foreign key constraints
+            $table->foreign('group_id')->references('group_id')->on('groups')->onDelete('cascade');
+            $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade');
+       
+            $table->unique(['group_id', 'user_id']); // Ensure unique group-user pairs
+        });
+        Schema::create('group_transaction_settings', function (Blueprint $table) {
+            $table->id();
+            $table->string('group_id',110); // Foreign key for group
+            $table->string('user_id',110); // Foreign key for user
+            $table->string('transaction_amount'); // Role of the user in the group (e.g., member, admin)
             $table->timestamps();
 
             // Foreign key constraints

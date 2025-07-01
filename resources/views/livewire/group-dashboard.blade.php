@@ -49,7 +49,7 @@
             <div class="border border-primary bg-light p-3">
                 <h4 class="fw-bold text-primary">Account Summary</h4>
                 <table class="table table-bordered mt-3 text-center">
-                    <thead class="table-primary">
+                    <thead class="table-danger">
                         <tr>
                             <th>Group_ID</th>
                             <th>Total Members</th>

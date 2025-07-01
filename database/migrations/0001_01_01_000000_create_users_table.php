@@ -25,7 +25,7 @@ return new class extends Migration
             //$table->string('email')->unique();
             //$table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->string('kyc_data')->nullable();
+         //   $table->string('kyc_data')->nullable();
             $table->boolean('is_kyc_completed')->default(false);
             $table->rememberToken();
             $table->timestamps();

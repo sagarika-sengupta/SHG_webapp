@@ -16,6 +16,6 @@ class GroupView extends Component
     }
     public function render()
     {
-        return view('livewire.group-view');
+        return view('livewire.group-view')->layout('components.layouts.app', ['theme' => 'theme-group']);
     }
 }

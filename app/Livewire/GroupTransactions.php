@@ -69,6 +69,6 @@ class GroupTransactions extends Component
     
     public function render()
     {
-        return view('livewire.group-transactions');
+        return view('livewire.group-transactions')->layout('components.layouts.app', ['theme' => 'theme-group']);
     }
 }

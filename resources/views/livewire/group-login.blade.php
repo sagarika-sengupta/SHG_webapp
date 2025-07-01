@@ -15,7 +15,7 @@
                             @error('group_password') <div class="text-danger small">{{ $message }}</div> @enderror
                         </div>
 
-                        <button type="submit" class="btn btn-success w-100">Login</button>
+                        <button type="submit" class="btn btn-danger w-100">Login</button>
                     </form>
                     <div class="text-center mt-3">
                         <a href="#" class="text-decoration-none">Forgot Password?</a> | 

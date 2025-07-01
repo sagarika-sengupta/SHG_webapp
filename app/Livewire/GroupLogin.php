@@ -39,6 +39,6 @@ class GroupLogin extends Component
     
     public function render()
     {
-        return view('livewire.group-login');
+        return view('livewire.group-login')->layout('components.layouts.app', ['theme' => 'theme-group']);;
     }
 }

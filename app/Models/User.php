@@ -25,7 +25,7 @@ class User extends Authenticatable
         'state',
        // 'monthly_contribution',
         'group_id',
-        'kyc_data',
+       //'kyc_data',
         'is_kyc_completed',
         'user_id',
         'password',
@@ -73,5 +73,9 @@ class User extends Authenticatable
     public function groups()
     {
         return $this->belongsToMany(GroupTable::class, 'group_user', 'user_id', 'group_id')->withPivot('role')->withTimestamps();
+    }
+    public function kyc()
+    {
+        return $this->hasOne(Kyc::class, 'user_id', 'user_id');
     }
 }

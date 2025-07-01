@@ -64,6 +64,6 @@ class GroupDashboard extends Component
     }
     public function render()
     {
-        return view('livewire.group-dashboard');
+        return view('livewire.group-dashboard')->layout('components.layouts.app', ['theme' => 'theme-group']);
     }
 }
