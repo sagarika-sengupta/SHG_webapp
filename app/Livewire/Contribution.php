@@ -9,6 +9,7 @@ use Livewire\Component;
 use Carbon\Carbon;
 use App\Models\User;
 use Illuminate\Support\Str; //used for generating uuid
+use App\Models\GroupSettings;
 
 class Contribution extends Component
 {
@@ -19,16 +20,23 @@ class Contribution extends Component
     public $paymentId;
     public $group_id; // For dropdown selection
     public $groups = []; // List of groups for the dropdown
+    public $group_settings;
 
     public function mount()
     {
-      
         $this->groups = $this->getGroupsForCurrentUser();
             // ✅ If there's only one group(in drop down), preselect it
        // if (count($this->groups) === 1) {
         $this->group_id = $this->groups[0]['group_id'];
         //}
         $this->amount = $this->amount[0]; //select 0th index's value by default
+                // Fetch the group settings for the selected group and set the amount
+        // $this->group_settings = GroupSettings::where('group_id', $this->group_id)->first();
+        // if ($this->group_settings && $this->group_settings->monthly_contribution) {
+        //     $this->amount = $this->group_settings->monthly_contribution;
+        // } else {
+        //     $this->amount = $this->amount[0]; // fallback to default if not found
+        // }
         $this->transaction_type = $this->transaction_type[0];
 
     }
@@ -56,7 +64,7 @@ class Contribution extends Component
             ];
         })->toArray();
     }
-
+    
     public function makePayment()
     {
         if (!$this->amount) {

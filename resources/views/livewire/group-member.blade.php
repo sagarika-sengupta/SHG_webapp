@@ -38,7 +38,7 @@
 
         <div class="col-md-6 d-flex align-items-end gap-2">
             <button type="button" wire:click="addMember" class="btn btn-success w-50">Add</button>
-            <button type="button" wire:click="removeMember" class="btn btn-danger w-50">Delete</button>
+            <button type="button" wire:click="removeMember" class="btn btn-danger w-50">Remove</button>
 
         </div>
         

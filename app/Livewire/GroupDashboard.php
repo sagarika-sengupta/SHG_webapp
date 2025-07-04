@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Middleware\GroupAuth;
 use App\Models\UserTransaction;
+use App\Models\GroupSettings;
 
 class GroupDashboard extends Component
 {
@@ -30,6 +31,8 @@ class GroupDashboard extends Component
         
         //IMPORTANT:Use the line below to acccess the pivot table(group_user) and get the users in the group
     $group = GroupTable::with('users')->find(session('group_id'));
+    $groupsettings =GroupSettings::where('group_id',$group->group_id)->first();
+    //without first it is a simple query builder. first() or find() is required to fetch the record.
 
     // Group-wise available balance
     $this->TotalAmount = UserTransaction::where('group_id', $group->group_id)
@@ -48,12 +51,12 @@ class GroupDashboard extends Component
             $this->village = $group->village; 
             $this->district = $group->district;
             $this->state = $group->state;
-            $this->members_count = $group->users()->count();
+            $this->members_count = $groupsettings->user_count;
             $this->members = $group->members; // Assuming 'members' is a field in your group table  
         }
         //$branch = $users->village;
-            $this->members_count = $group->users->count();
-            $this->members = $group->users; // Get users from the relationship
+            //$this->members_count = $group->users->count();
+            //$this->members = $group->users; // Get users from the relationship
 
         // Calculate the available balance
        // $this->availableBalance = UserTransaction::where('user_id', $this->userId)

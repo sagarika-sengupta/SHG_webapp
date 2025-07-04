@@ -21,6 +21,30 @@ class MemberDisplay extends Component
     public $group;
     public $group_name;
     public $user_name;
+    public $statusFilter = 'all'; // default to show all members
+    
+    public function updatedStatusFilter()
+    {
+        $this->mount(); // reload with new filter
+    }
+    public function filterMembers()
+    {
+        $group = GroupTable::find(session('group_id'));
+
+        if (!$group) {
+            $this->members = collect();
+            return;
+        }
+
+        $query = $group->users();
+
+        if ($this->statusFilter !== 'all') {
+            $query->wherePivot('status', $this->statusFilter);
+        }
+
+        $this->members = $query->get();
+    }
+
 
     public function mount()
     {
@@ -33,9 +57,6 @@ class MemberDisplay extends Component
             $this->group_id = $group->group_id;
             $this->group_name = $group->group_name;
             $this->role = $group->role; //in blade file------> <td>{{ $member->pivot->role }}</td> 
-            //$this->members = $this->group->users;
-           // $this->village = $this->group->village;
-            //$this->state = $this->group->state;
             $this->members = $group->users;
             $this->user_id = $group->users->pluck('user_id')->toArray();
             $this->user_name = $group->users->pluck('name')->toArray();
@@ -45,8 +66,8 @@ class MemberDisplay extends Component
         }
         
         
-
     }
+    
 
     public function render()
     {

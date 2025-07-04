@@ -59,6 +59,11 @@
                 <input type="text" id="state" class="form-control" wire:model="state" required>
                 @error('state') <div class="text-danger small">{{ $message }}</div> @enderror
             </div>
+            <!-- Monthly Contribution -->
+            <div class="mb-3">
+                <label for="monthly_contribution" class="form-label">Monthly Contribution:</label>
+                <input type="number" id="monthly_contribution" class="form-control" wire:model="monthly_contribution" step="0.01" required>
+            </div>
 
             <!-- Group Password -->
             <div class="mb-3">

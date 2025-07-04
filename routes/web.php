@@ -35,6 +35,7 @@ use App\Livewire\GroupTransactions;
 use App\Livewire\ApproveGroupTransactions;
 use App\Http\Middleware\userLogin;
 use App\Http\Middleware\groupLogin;
+use App\Livewire\UserApproval;
 
 
 
@@ -62,6 +63,7 @@ Route::middleware(userLogin::class)->group(function () {
     Route::get('/notification', Notification::class)->name('notification');
     Route::get('/group-view',GroupView::class)->name('group-view');
     Route::get('/user-group-view',UserGroupView::class)->name('user-group-view');
+    Route::get('/user-approval',UserApproval::class)->name('user-approval');
 });
 
 //Route::middleware(viewMiddleware::class)->group(function () {

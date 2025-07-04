@@ -20,6 +20,20 @@ class GroupTable extends Model
 
     public function users()
     {
-        return $this->belongsToMany(User::class, 'group_user', 'group_id', 'user_id')->withPivot('role')->withTimestamps();
+        return $this->belongsToMany(User::class, 'group_user', 'group_id', 'user_id')
+        ->withPivot('role','status')->withTimestamps();
     }
+    public function leader()
+    {
+        return $this->belongsToMany(User::class, 'group_user', 'group_id', 'user_id') //imp to have 'group_user' specified in belongsToMany and foreign keys
+            ->withPivot(['status', 'role'])
+            ->wherePivot('role', 'leader');
+    }
+    public function getUserCountAttribute()
+    {
+        return $this->users()
+                ->wherePivot('status', 'active')
+                ->count();
+    }
+
 }

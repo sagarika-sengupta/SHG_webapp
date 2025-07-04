@@ -16,7 +16,20 @@
 
     <div class="text-center mb-4">
         <h3 class="fw-semibold">Group Members</h3>
-    </div>
+        <div class="mb-4">
+            <form wire:submit.prevent="filterMembers" class="d-flex align-items-center gap-2">
+                <label for="statusFilter" class="form-label fw-semibold mb-0">Filter by Status:</label>
+                <select wire:model="statusFilter" id="statusFilter" class="form-select w-auto">
+                    <option value="all">All</option>
+                    <option value="pending">Pending</option>
+                    <option value="active">Active</option>
+                    <option value="rejected">Rejected</option>
+                </select>
+                <button type="submit" class="btn btn-primary">Filter</button>
+            </form>
+        </div>
+
+
 
     <div class="table-responsive">
         <table class="table table-bordered table-striped table-hover align-middle text-center">
@@ -28,6 +41,7 @@
                     <th scope="col">Village</th>
                     <th scope="col">State</th>
                     <th scope="col">Role</th>
+                    <th scope="col">Status</th>
                 </tr>
             </thead>
             <tbody>
@@ -39,6 +53,7 @@
                         <td>{{ $member->village }}</td>
                         <td>{{ $member->state }}</td>
                         <td>{{ $member->pivot->role }}</td> 
+                        <td>{{ $member->pivot->status}} </td>
                     </tr>
                 @endforeach
             </tbody>
