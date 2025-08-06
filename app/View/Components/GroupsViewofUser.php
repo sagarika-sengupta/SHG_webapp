@@ -7,6 +7,9 @@ use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 use Illuminate\Support\Facades\Session;
 use App\Models\User;
+use App\Models\GroupTable;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 
 class GroupsViewofUser extends Component
@@ -26,25 +29,33 @@ class GroupsViewofUser extends Component
        $this->getGroupsofUser();
     }
 
-    public function getGroupsofUser()
-    {
-       $userId = Session::get('user_id');
-       // Fetch user with associated groups
-       $user = User::with('groups')->where('user_id', $userId)->first();
+   public function getGroupsofUser()
+{
+    $userId = Session::get('user_id');
+    Log::info("Fetching active groups for user_id: " . $userId);
 
-       if ($user) {
-          $this->groups = $user->groups->map(function ($group) {
-             return [
-                'group_id' => $group->group_id,
-                'group_name' => $group->group_name,
-                'village' => $group->village,
-                'district' => $group->district,
-                'state' => $group->state,
-                'role' => $group->pivot->role
-             ];
-          })->toarray();
-       }
+    $groups = DB::table('group_user')
+        ->join('groups', 'group_user.group_id', '=', 'groups.group_id')
+        ->where('group_user.user_id', $userId)
+        ->where('group_user.status', '=', 'active') // 👈 filter by status here
+        ->select(
+            'groups.group_id',
+            'groups.group_name',
+            'groups.village',
+            'groups.district',
+            'groups.state',
+            'group_user.role',
+            'group_user.status'
+        )
+        ->get();
+
+    foreach ($groups as $group) {
+        Log::info("Included Group - ID: {$group->group_id}, Role: {$group->role}, Status: {$group->status}");
     }
+
+    $this->groups = $groups->toArray(); // or keep as collection if using object notation in Blade
+}
+
 
 
     /**

@@ -13,9 +13,9 @@
                 <tbody class ="text-center">
                     @forelse($groups as $group)
                         <tr>
-                            <td>{{ $group['group_id'] }}</td>
-                            <td>{{ $group['group_name'] }}</td>
-                            <td>{{$group['role']}} </td>
+                            <td>{{ $group->group_id }}</td>
+                            <td>{{ $group->group_name }}</td>
+                            <td>{{ $group->role }}</td>
                         </tr>
                     @empty
                         <tr>

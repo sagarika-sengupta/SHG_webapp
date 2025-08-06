@@ -3,44 +3,33 @@
 namespace App\Livewire;
 
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Auth;
 use App\Models\UserTransaction;
 use Livewire\Component;
-use Carbon\Carbon;
+use Illuminate\Support\Str;
 use App\Models\User;
-use Illuminate\Support\Str; //used for generating uuid
 use App\Models\GroupSettings;
 
 class Contribution extends Component
 {
-    public $user_id;
-    public $amount=[200, 500, 1000];
-    public $transaction_type=['RD','FD'];
-    public $transactionId='pending'; // Temporary placeholder
-    public $paymentId;
-    public $group_id; // For dropdown selection
-    public $groups = []; // List of groups for the dropdown
-    public $group_settings;
+    public $manual_amount; // Manual user-entered amount
+    public $transaction_type = 'RD'; // Default selected
+    public $group_id;
+    public $groups = [];
+    public $confirmedMismatch = false;
+    public $showWarning = false; // Add this property
 
     public function mount()
     {
-        $this->groups = $this->getGroupsForCurrentUser();
-            // ✅ If there's only one group(in drop down), preselect it
-       // if (count($this->groups) === 1) {
-        $this->group_id = $this->groups[0]['group_id'];
-        //}
-        $this->amount = $this->amount[0]; //select 0th index's value by default
-                // Fetch the group settings for the selected group and set the amount
-        // $this->group_settings = GroupSettings::where('group_id', $this->group_id)->first();
-        // if ($this->group_settings && $this->group_settings->monthly_contribution) {
-        //     $this->amount = $this->group_settings->monthly_contribution;
-        // } else {
-        //     $this->amount = $this->amount[0]; // fallback to default if not found
-        // }
-        $this->transaction_type = $this->transaction_type[0];
+         $this->groups = $this->getGroupsForCurrentUser();
 
+    if (!$this->group_id && count($this->groups) > 0) {
+        $this->group_id = $this->groups[0]['group_id'];
     }
 
+    if (count($this->groups) === 0) {
+        session()->flash('payment-error', "You are not in any group currently.");
+    }
+    }
 
     private function getGroupsForCurrentUser()
     {
@@ -49,11 +38,6 @@ class Contribution extends Component
 
         if (!$user) return [];
 
-        // Map each group associated with the user to a simplified array structure
-       // $group is an individual item from the $user->groups collection.
-        // $user->groups is a collection of all groups associated with the user.
-        // function($group) is a callback function that processes each group in the $user->groups collection.
-        //The map() method is used to transform the collection into a new structure.
         return $user->groups->map(function ($group) {
             return [
                 'group_id' => $group->group_id,
@@ -64,44 +48,82 @@ class Contribution extends Component
             ];
         })->toArray();
     }
-    
+
+    public function updatedGroupId()
+    {
+        $this->confirmedMismatch = false;
+        $this->showWarning = false; // Reset warning when group changes
+    }
+
+    public function updatedManualAmount()
+    {
+        $this->confirmedMismatch = false;
+        $this->showWarning = false; // Reset warning when amount changes
+    }
+
+    public function confirmMismatch()
+    {
+        $this->confirmedMismatch = true;
+        $this->showWarning = false;
+        $this->makePayment();
+    }
+
     public function makePayment()
     {
-        if (!$this->amount) {
-            session()->flash('payment-error', 'Please select an amount to proceed with payment.');
+        // Validation
+        if (!$this->manual_amount || !$this->group_id) {
+            session()->flash('payment-error', 'Please select a group and enter an amount.');
             return;
+        }
+
+        if ($this->manual_amount <= 0) {
+            session()->flash('payment-error', 'Please enter a valid amount greater than 0.');
+            return;
+        }
+
+        // Check for amount mismatch only if not already confirmed
+        if (!$this->confirmedMismatch) {
+            $groupSetting = GroupSettings::where('group_id', $this->group_id)->first();
+            $expectedAmount = $groupSetting ? $groupSetting->monthly_contribution : null;
+
+            if ($expectedAmount && $this->manual_amount != $expectedAmount) {
+                $this->showWarning = true;
+                session()->flash('payment-warning', "Entered amount ₹{$this->manual_amount} doesn't match the expected ₹{$expectedAmount}. Do you still want to proceed?");
+                return;
+            }
         }
 
         $UserId = session('user_id');
         $user = User::where('user_id', $UserId)->first();
 
         if (!$user) {
-            session()->flash('payment-error', 'User not found. Login again.');
+            session()->flash('payment-error', 'User not found. Please log in again.');
             return;
         }
 
-        $userId = $user->user_id;
-
         try {
-            $transactionId = 'pending_' . Str::uuid()->toString(); // ✅ FIXED
-            $paymentId = $this->generatePaymentId($userId); //stores value of generatePaymentId method in $paymentId variable
+            $transactionId = 'pending_' . Str::uuid()->toString();
+            $paymentId = $this->generatePaymentId($user->user_id);
 
             UserTransaction::create([
                 'payment_id' => $paymentId,
                 'transaction_id' => $transactionId,
-             //   'transaction_type' => $this->transaction_type,
-                'user_id' => $userId,
-                'group_id' => $this->group_id, // Save selected group
-                'amount' => $this->amount,
-             //   'transaction_id' => 'pending', // Temporary placeholder
+                'user_id' => $user->user_id,
+                'group_id' => $this->group_id,
+                'amount' => $this->manual_amount,
                 'transaction_type' => $this->transaction_type,
             ]);
 
             session()->flash('payment-success', 'Payment initiated. Waiting for confirmation!');
+            
+            // Reset form
+            $this->confirmedMismatch = false;
+            $this->showWarning = false;
+            $this->manual_amount = '';
+            
         } catch (\Exception $e) {
             \Log::error('Payment failed: ' . $e->getMessage());
             session()->flash('payment-error', 'An error occurred: ' . $e->getMessage());
-
         }
     }
 
@@ -112,18 +134,12 @@ class Contribution extends Component
         $groupId = strtoupper($this->group_id);
         $user_GroupId = $userId . '_' . $groupId . '_';
         $date = date('dmY');
-         // Keep generating a new ID until we find one that's unique
-            do {
-                $random = str_pad(mt_rand(1, 999), 3, '0', STR_PAD_LEFT);
-                $transactionId = $prefix . $user_GroupId . $date . $random;
-            } while (UserTransaction::where('transaction_id', $transactionId)->exists());
-        //   // Count existing transactions for this user+group+date
-        //  $count = UserTransaction::where('user_id', $userId)
-        // ->where('group_id', $groupId)
-        // ->whereDate('created_at', today())
-        // ->count();
-        // $newNumber = str_pad($count + 1, 3, '0', STR_PAD_LEFT);
-        // return $prefix . $user_GroupId . $date . $newNumber;
+
+        do {
+            $random = str_pad(mt_rand(1, 999), 3, '0', STR_PAD_LEFT);
+            $transactionId = $prefix . $user_GroupId . $date . $random;
+        } while (UserTransaction::where('transaction_id', $transactionId)->exists());
+
         return $transactionId;
     }
 
