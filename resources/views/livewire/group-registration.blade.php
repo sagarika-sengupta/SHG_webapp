@@ -65,6 +65,12 @@
                 <input type="number" id="monthly_contribution" class="form-control" wire:model="monthly_contribution" step="0.01" required>
             </div>
 
+            <!-- Maximum Members Allowed -->
+            <div class="mb-3">
+                <label for="max_members" class="form-label">Maximum Members:</label>
+                <input type="number" id="max_members" class="form-control" wire:model="max_members" step="0.01" required>
+            </div>
+
             <!-- Group Password -->
             <div class="mb-3">
                 <label for="group_password" class="form-label">Group Password:</label>

@@ -71,6 +71,6 @@ class MemberDisplay extends Component
 
     public function render()
     {
-        return view('livewire.member-display');
+        return view('livewire.member-display')->layout('components.layouts.app', ['theme' => 'theme-group']);;
     }
 }

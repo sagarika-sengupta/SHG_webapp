@@ -32,16 +32,44 @@ class GroupMember extends Component
         $this->validate([
             'group_id' => 'required|exists:groups,group_id',
             'user_id' => 'required|exists:users,user_id',
+        //    'max_members' => 'required|exists:group_settings,max_members'
         ]);
         $this->group_id = session('group_id');
             //dd('group_id=' . $this->group_id . ' user_id=' . $this->user_id);
         $group = GroupTable::where('group_id', $this->group_id)->first();
+        //$max_members = 
         //$user = User::where('user_id', $this->user_id)->first();
         if (!$group) {
                 session()->flash('error', 'Group not found.');
                 return;
             }
+            // Step 2: Fetch group settings
+            $groupSettings = GroupSettings::where('group_id', $this->group_id)->first();
+            if ($groupSettings) {
+                // Count ALL members including pending
+                $totalMembers = DB::table('group_user')
+                    ->where('group_id', $this->group_id)
+              //      ->where('user_id', $this->user_id)
+                    ->whereIn('status', ['active', 'pending'])
+                    ->distinct('user_id')
+                    ->count();
 
+                if ($totalMembers >= $groupSettings->max_members) {
+                    session()->flash('error', 'This group has reached the maximum allowed members (including pending requests).');
+                    return;
+                }
+            }
+
+            // Step 3: Check if user already exists in pivot
+            $exists = DB::table('group_user')
+                ->where('group_id', $this->group_id)
+                ->where('user_id', $this->user_id)
+                ->exists();
+
+            if ($exists) {
+                session()->flash('error', 'User is already a member of this group.');
+                return;
+            }
         try {
             // Add or update pivot row with status='pending' and role='member'
             // $group->users()->syncWithoutDetaching([

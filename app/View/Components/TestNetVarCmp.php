@@ -13,6 +13,7 @@ class TestNetVarCmp extends Component
      */
 
     public $dashboard;
+    public $group_dashboard;
     public $account;
     public $contacts;
     public $setting;
@@ -20,10 +21,11 @@ class TestNetVarCmp extends Component
     public $home;
     public $menu_lists ;
 
-    public function __construct($home=0,$dashboard=1,$account=0,$contacts=0,$setting=0,$about=0,$menu_list="")
+    public function __construct($home=0,$dashboard=1,$group_dashboard=1,$account=0,$contacts=0,$setting=0,$about=0,$menu_list="")
     {
         $this->home = intval($home);
         $this->dashboard = intval($dashboard);
+        $this->group_dashboard = intval($group_dashboard);
         $this->account = intval($account);
         $this->contacts = intval($contacts);
         $this->setting = intval($setting);

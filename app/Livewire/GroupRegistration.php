@@ -27,7 +27,7 @@ class GroupRegistration extends Component
     public $group_password;
     public $group_password_confirmation;
     public $user_count;
-    public $max_members=10;
+    public $max_members;
     public $monthly_contribution;
 
 

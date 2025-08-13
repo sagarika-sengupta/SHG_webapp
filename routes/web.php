@@ -36,6 +36,7 @@ use App\Livewire\ApproveGroupTransactions;
 use App\Http\Middleware\userLogin;
 use App\Http\Middleware\groupLogin;
 use App\Livewire\UserApproval;
+use App\Livewire\GroupSettings;
 
 
 
@@ -78,6 +79,7 @@ Route::get('/group-member', GroupMember::class)->name('group-member');
 Route::get('/member-display', MemberDisplay::class)->name('member-display');
 Route::get('/group-transactions', GroupTransactions::class)->name('group-transactions');
 Route::get('/approve-group-transactions',ApproveGroupTransactions::class)->name('approve-group-transactions');
+Route::get('/group-settings', GroupSettings::class)->name('GroupSettings');
 Route::post('/group_logout', [GroupLogoutController::class, 'group_logout'])//group_logout is the method in GroupLogoutController
     ->name('group_logout');
 Route::get("/test", function () {

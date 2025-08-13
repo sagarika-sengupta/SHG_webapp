@@ -29,7 +29,7 @@
                 <div class="d-flex flex-column gap-3">
                     <button onclick="window.location.href='{{ route('group-member') }}'" class="btn btn-primary p-3 rounded-0">Add/Delete Members</button>
                     <button onclick="window.location.href='{{ route('approve-group-transactions') }}'" class="btn btn-primary p-3 rounded-0">Approve Group Transactions</button>
-                    <!-- <button class="btn btn-primary p-3 rounded-0">View</button> -->
+                    <button onclick="window.location.href='{{ route('GroupSettings') }}'"class="btn btn-primary p-3 rounded-0">Settings</button> 
 
                     <!-- Logout Button with Correct Styling -->
                     <form id="group_logout" method="POST" action="{{ route('group_logout') }}">

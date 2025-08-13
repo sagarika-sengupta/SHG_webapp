@@ -7,6 +7,6 @@
 {{-- Check if the user is logged in and has a role of 1 --}}
 @if ($user && $user->role == 1)
     <div class="d-flex flex-column gap-3">
-                <button class="btn p-3 rounded-0" style="background-color: light-grey; color: black; border: 1px solid blue;" onclick="window.location.href='{{ route('group-view') }}'">Group Dashboard</button>
+                <button class="btn p-3 rounded-0" style="background-color: light-grey; color: black; border: 1px solid blue;" onclick="window.location.href='{{ route('group-view') }}'">Groups Managed By You</button>
     </div>
 @endif

@@ -33,7 +33,7 @@
 </head>
 <body class="{{ $theme ?? 'theme-user' }}">
     <header>
-        <x-test-net-var-cmp dashboard=1 contact=1 accounts=1 />
+        <x-test-net-var-cmp />
     </header>
 
     <main class="container mt-4">

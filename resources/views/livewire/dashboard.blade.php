@@ -2,7 +2,7 @@
     <!-- Notification Button -->
     <div class="d-flex justify-content-end mb-3">
         <button class="btn btn-primary rounded-0" onclick="window.location.href='{{ route('notification') }}'">
-            Notifications <span class="badge bg-danger">{{ $notificationCount }}</span>
+            Status <span class="badge bg-danger">{{ $notificationCount }}</span>
         </button>
     </div>
 
@@ -13,7 +13,7 @@
             <button onclick="window.location.href='{{ route('loan') }}'" class="btn btn-primary p-3 flex-fill rounded-0">Loan</button>
             <button onclick="window.location.href='{{ route('user-group-view') }}'" class="btn btn-primary p-3 flex-fill rounded-0">View Group Details</button>
             <button onclick="window.location.href='{{ route('user-approval') }}'" class="btn btn-primary p-3 flex-fill rounded-0"> Approval </button>                                                                         
-            <button class="btn btn-primary p-3 flex-fill rounded-0">Enquiry</button>
+            <!-- <button class="btn btn-primary p-3 flex-fill rounded-0">Enquiry</button> -->
         </div>
     </div>
 
@@ -29,8 +29,8 @@
         <div class="col-md-3 mb-4">
             <div class="border border-primary bg-light p-3 h-100">
                 <div class="d-flex flex-column gap-3">
-                    <button class="btn btn-primary p-3 rounded-0">Account Details</button>
-                    <button class="btn btn-primary p-3 rounded-0">View</button>
+                    <!-- <button class="btn btn-primary p-3 rounded-0">Account Details</button> -->
+                    <!-- <button class="btn btn-primary p-3 rounded-0">View</button> -->
                     <x-group-bar />
                     <form id="Logout" method="POST" action="{{ route('logout') }}">
                         @csrf
