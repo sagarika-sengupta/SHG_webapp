@@ -76,10 +76,26 @@ class Contribution extends Component
             return;
         }
 
-        if ($this->manual_amount <= 0) {
-            session()->flash('payment-error', 'Please enter a valid amount greater than 0.');
+        if ($this->manual_amount <= 1) {
+            session()->flash('payment-error', 'Please enter a valid amount greater than 1.');
             return;
         }
+
+        // Only allow one RD/FD transaction per day per user per group
+    if (in_array($this->transaction_type, ['RD', 'FD'])) {
+        $UserId = session('user_id');
+        $today = now()->toDateString();
+        $exists = UserTransaction::where('user_id', $UserId)
+            ->where('group_id', $this->group_id)
+            ->where('transaction_type', $this->transaction_type)
+            ->whereDate('created_at', $today)
+            ->exists();
+
+        if ($exists) {
+            session()->flash('payment-error', 'Only one ' . $this->transaction_type . ' transaction is allowed per day.');
+            return;
+        }
+    }
 
         // Check for amount mismatch only if not already confirmed
         if (!$this->confirmedMismatch) {

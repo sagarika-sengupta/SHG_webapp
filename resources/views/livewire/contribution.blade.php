@@ -34,6 +34,7 @@
                 <option value="" disabled>Deposit Type</option>
                 <option value="RD">Recurring Deposit</option>
                 <option value="FD">Fixed Deposit</option>
+                <option value="Others">Others</option>
             </select>
         </div>
 
