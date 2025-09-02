@@ -76,7 +76,7 @@ class Contribution extends Component
             return;
         }
 
-        if ($this->manual_amount <= 1) {
+        if ($this->manual_amount < 0) {
             session()->flash('payment-error', 'Please enter a valid amount greater than 1.');
             return;
         }

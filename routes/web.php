@@ -37,9 +37,11 @@ use App\Http\Middleware\userLogin;
 use App\Http\Middleware\groupLogin;
 use App\Livewire\UserApproval;
 use App\Livewire\GroupSettings;
+use Laravel\Folio\Folio;
+use App\livewire\ReceiptDownload;
+//Folio::domain('{page}.shg.com')->routes();
 
-
-
+//Route::domain('shg.com')->group(function () {
 Route::get('/', Home::class)->name('home');
 Route::get('/about', About::class)->name('about');
 Route::get('/register', Register::class)->name('register');
@@ -66,13 +68,13 @@ Route::middleware(userLogin::class)->group(function () {
     Route::get('/user-group-view',UserGroupView::class)->name('user-group-view');
     Route::get('/user-approval',UserApproval::class)->name('user-approval');
 });
-
+//});
 //Route::middleware(viewMiddleware::class)->group(function () {
 
     
     
 //});
-
+//Route::domain('shg.com')->group(function () {
 Route::middleware(groupLogin::class)->group(function (){
 Route::get('/group-dashboard', GroupDashboard::class)->name('GroupDashboard');
 Route::get('/group-member', GroupMember::class)->name('group-member');
@@ -82,7 +84,54 @@ Route::get('/approve-group-transactions',ApproveGroupTransactions::class)->name(
 Route::get('/group-settings', GroupSettings::class)->name('GroupSettings');
 Route::post('/group_logout', [GroupLogoutController::class, 'group_logout'])//group_logout is the method in GroupLogoutController
     ->name('group_logout');
+Route::get("/kyc", kyc::class)->name('kyc');
+Route::get("/RecieptDownload", RecieptDownload::class)->name('Group Transaction Receipt');
 Route::get("/test", function () {
     return view('livewire.test');
 });
 });
+//});
+// use Illuminate\Support\Facades\Route;
+
+// // USER SUBDOMAIN
+// Route::domain('user.localhost')->group(function () {
+//     Route::get('/', Home::class)->name('home');
+//     Route::get('/about', About::class)->name('about');
+//     Route::get('/register', Register::class)->name('register');
+//     Route::get('/login', Login::class)->name('login');
+//     Route::get('/contact', Contact::class)->name('contact');
+//     Route::get('/contribution', Contribution::class)->name('contribution');
+//     Route::get('/deposit', Deposit::class)->name('deposit');
+//     Route::get('/loan', Loan::class)->name('loan');
+//     Route::get('/group-registration', GroupRegistration::class)->name('group-registration');
+
+//     Route::middleware(userLogin::class)->group(function () {
+//         Route::get('/dashboard', Dashboard::class)->name('dashboard');
+//         Route::get('/account', Accounts::class)->name('account');
+//         Route::get('/settings', Settings::class)->name('settings');
+//         Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
+//         Route::post('/save-transaction', [TransactionController::class, 'store']);
+//         Route::get('/group', [GroupTable::class, 'index']);
+//         Route::get('/transaction-history', TransactionHistory::class)->name('transaction-history');
+//         Route::get('/notification', Notification::class)->name('notification');
+//         Route::get('/group-view', GroupView::class)->name('group-view');
+//         Route::get('/user-group-view', UserGroupView::class)->name('user-group-view');
+//         Route::get('/user-approval', UserApproval::class)->name('user-approval');
+//     });
+// });
+
+// // GROUP SUBDOMAIN
+// Route::domain('group.localhost')->group(function () {
+//     Route::middleware(groupLogin::class)->group(function () {
+//         Route::get('/group-dashboard', GroupDashboard::class)->name('GroupDashboard');
+//         Route::get('/group-member', GroupMember::class)->name('group-member');
+//         Route::get('/member-display', MemberDisplay::class)->name('member-display');
+//         Route::get('/group-transactions', GroupTransactions::class)->name('group-transactions');
+//         Route::get('/approve-group-transactions', ApproveGroupTransactions::class)->name('approve-group-transactions');
+//         Route::get('/group-settings', GroupSettings::class)->name('GroupSettings');
+//         Route::post('/group_logout', [GroupLogoutController::class, 'group_logout'])->name('group_logout');
+//         Route::get("/test", function () {
+//             return view('livewire.test');
+//         });
+//     });
+// });
